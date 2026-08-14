@@ -10,6 +10,7 @@ cmake_dependent_option(ES_GLES "Build the game with OpenGL ES" OFF UNIX OFF)
 cmake_dependent_option(ES_STEAM "Build the game for the Steam Linux runtime" OFF UNIX OFF)
 cmake_dependent_option(ES_USE_SYSTEM_LIBRARIES "Use system libraries instead of the vcpkg ones." ON "APPLE OR ES_STEAM" OFF)
 cmake_dependent_option(ES_CREATE_BUNDLE "Create a Bundle instead of an executable. Not suitable for development purposes." OFF APPLE OFF)
+option(ES_USE_OFFSCREEN "Run the integration tests through SDL's offscreen video driver, so that they need no display server." OFF)
 
 # Support Debug and Release configurations.
 set(CMAKE_CONFIGURATION_TYPES "Debug" "Release" CACHE STRING "" FORCE)

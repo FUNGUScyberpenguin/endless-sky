@@ -1,8 +1,14 @@
 set(ES_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/integration/config")
 
+# If the game was configured for offscreen rendering, ask SDL for its "offscreen"
+# video driver, so that the tests need no display server.
+if(ES_USE_OFFSCREEN)
+	set(ES_LAUNCHER "${CMAKE_COMMAND}" -E env "SDL_VIDEODRIVER=offscreen")
+endif()
+
 # Get all the tests to run.
 execute_process(
-	COMMAND ${ES} --config "${ES_CONFIG}" --tests
+	COMMAND ${ES_LAUNCHER} ${ES} --config "${ES_CONFIG}" --tests
 	OUTPUT_VARIABLE INTEGRATION_TESTS
 	ERROR_QUIET
 )
@@ -23,6 +29,7 @@ foreach(test ${INTEGRATION_TESTS_LIST})
 		\"-Dtest=${test}\"
 		\"-DRESOURCE_PATH=${RESOURCE_PATH}\"
 		\"-DES_CONFIG=${ES_CONFIG}\"
+		\"-DES_USE_OFFSCREEN=${ES_USE_OFFSCREEN}\"
 		-P \"${CMAKE_SOURCE_DIR}/integration/RunIntegrationTest.cmake\")")
 		set(SET_TEST_PROPS
 	"set_tests_properties([==[${test}]==] PROPERTIES
@@ -38,6 +45,7 @@ foreach(test ${INTEGRATION_TESTS_LIST})
 		\"-Dtest=${test}\"
 		\"-DRESOURCE_PATH=${RESOURCE_PATH}\"
 		\"-DES_CONFIG=${ES_CONFIG}\"
+		\"-DES_USE_OFFSCREEN=${ES_USE_OFFSCREEN}\"
 		-DDEBUG=--debug
 		-P \"${CMAKE_SOURCE_DIR}/integration/RunIntegrationTest.cmake\")")
 	set(SET_TEST_PROPS_DEBUG
