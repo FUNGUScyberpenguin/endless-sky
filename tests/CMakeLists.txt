@@ -4,8 +4,11 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if(NOT MSVC)
+	# Match the RTTI setting of EndlessSkyLib. Debug builds keep RTTI enabled because
+	# they are compiled with "-fsanitize=vptr", which needs RTTI to identify objects;
+	# without it the sanitizer reports spurious "invalid vptr" errors.
 	target_compile_options(EndlessSkyTests PUBLIC
-		"-Wall" "-pedantic-errors" "-Wold-style-cast" "-fno-rtti")
+		"-Wall" "-pedantic-errors" "-Wold-style-cast" "$<$<CONFIG:Release>:-fno-rtti>")
 endif()
 
 find_package(Catch2 CONFIG REQUIRED)
